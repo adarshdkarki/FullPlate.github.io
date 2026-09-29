@@ -156,3 +156,53 @@
           ],
           "Signature Thali Sets (Dal Bhat Power)": [
             { id: 5, name: "Authentic Non-Veg Thali", price: 15, description: "A classic, nourishing platter featuring steamed aromatic Basmati rice, slow-simmered yellow lentils (Dal), stir-fried mustard greens (Saag), mixed seasonal vegetable curry, house-made fermented radish pickle (Mula ko Achar), and crispy papad.", variants: ["Local Chicken Curry", "Tender Mutton Curry"], selectedVariant: "Local Chicken Curry" },
+{ id: 6, name: "Traditional Vegetarian Thali", price: 15, description: "Steamed rice served with yellow lentils, butter paneer or cottage cheese curry, seasonal vegetable tarkari, Jimbu-tempered saag, fresh cucumber-yogurt salad, and mixed fruit-spiced pickle." }
+],
+"Chef’s Regional Specialties": [
+{ id: 7, name: "Kwati Soup", price: 15, description: "A nutrient-rich, comforting soup prepared from nine distinct varieties of sprouted beans, slow-cooked with ginger, ajwain, and garlic." },
+{ id: 8, name: "Samay Baji Platter", price: 15, description: "A Newari ritual feast platter consisting of beaten rice (Chiura), choila, black-eyed peas (Bodi), spiced potato salad, boiled egg, fried ginger/garlic slices, and bara." },
+{ id: 9, name: "Aloo Tama Bodi", price: 15, description: "Tangy curry made with fermented bamboo shoots, black-eyed peas, and potatoes cooked in a light, sour gravy." }
+],
+"Desserts (Mithai)": [
+{ id: 10, name: "Yomari", price: 5, description: "Steamed rice-flour dumplings shaped like a lotus seed, filled with rich sweet Chaku (molasses) and toasted sesame seeds or Khoa.", options: ["Chaku & Sesame", "Khoa"], selectedOption: "Chaku & Sesame" },
+{ id: 11, name: "Kheer", price: 5, description: "Traditional cardamom-infused rice pudding cooked slowly with whole milk, cashews, raisins, and coconut flakes." }
+],
+"Traditional Beverages": [
+{ id: 12, name: "Nepali Milk Tea (Chhiya)", price: 1, description: "Himalayan black tea brewed with whole milk, fresh ginger, crushed cardamom, cloves, and cinnamon." },
+{ id: 13, name: "Himalayan Herbal Infusion", price: 1, description: "Herbal tea made with wild rhododendron petals, lemongrass, and mint leaves." }
+]
+},
+addToCart(item) {
+// Construct customization labels dynamically based on options picked
+let details = [];
+if (item.options) details.push(item.selectedOption || item.options[0]);
+if (item.variants) details.push(item.selectedVariant || item.variants[0]);
+let configString = details.join(' / ');
+// Look for an existing match in the cart with exact same options
+let match = this.cart.find(c => c.id === item.id && c.customization === configString);
+if (match) {
+match.quantity++;
+} else {
+this.cart.push({
+id: item.id,
+name: item.name,
+price: item.price,
+quantity: 1,
+customization: configString
+});
+}
+},
+updateQuantity(index, amount) {
+this.cart[index].quantity += amount;
+if (this.cart[index].quantity <= 0) {
+this.cart.splice(index, 1);
+}
+},
+cartCount() {
+return this.cart.reduce((sum, i) => sum + i.quantity, 0);
+},
+cartTotal() {
+return this.cart.reduce((sum, i) => sum + (i.price * i.quantity), 0);
+}
+}
+}
